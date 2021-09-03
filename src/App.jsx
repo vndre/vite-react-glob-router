@@ -8,6 +8,17 @@ import {
 
 const routes = import.meta.glob('./routes/*.jsx')
 
+const matchPath = (path) => {
+  switch (path) {
+    case '/home':
+      return '/'
+    case '/user':
+      return '/user/:id'
+    default:
+      return path
+  }
+}
+
 function App() {
   return (
     <Router>
@@ -30,8 +41,9 @@ function App() {
             {
               Object.entries(routes).map(([routePath, component]) => {
                 const Component = lazy(component)
-                let path = routePath.match(/\/[A-Z]+[^.]*/)[0].toLowerCase()
-                if (path === '/home') path = '/'
+                const componentPath = routePath.match(/\/[A-Z]+[^.]*/)[0].toLowerCase()
+                const path = matchPath(componentPath)
+
                 return (
                   <Route exact path={path} key={routePath} component={Component} />
                 )
